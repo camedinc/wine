@@ -16,6 +16,7 @@ from core.estadistica import Correlacion
 from core.modelos.modelo_rf import BosqueAleatorioClasificador
 from core.modelos.modelo_svm import SupportVectorMachineClasificador
 from core.modelos.modelo_GaussianNB import NaiveBayes
+from core.modelos.modelo_LogReg import RegresionLogistica
 from core.evaluacion import Evaluacion
 from core.modelos.error_rf import BosqueAleatorioError
 
@@ -156,8 +157,18 @@ modelo_nb.definir_modelo(scoring, cv)
 modelo_nb.entrenar_modelo()
 y_pred=modelo_nb.predecir(X_test)
 '''
-# Modelamiento Clasificación Logística
+# Modelamiento Regresión Logística
+modelo_rl=RegresionLogistica(X_train, X_test, y_train, y_test)
 
+C=[0.001, 0.01, 0.1, 1, 10, 100],          # Regularización
+solver=['liblinear', 'lbfgs'],             # Métodos de optimización
+penalty=['l2', 'none'],                    # Tipo de regularización
+scoring='recall'
+cv=5
+
+modelo_rl.definir_modelo(C, solver, penalty, scoring, cv)
+modelo_rl.entrenar_modelo()
+y_pred=modelo_rl.predecir(X_test)
 
 # Evaluación
 evaluacion=Evaluacion(y_test, y_pred)
