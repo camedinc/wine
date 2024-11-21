@@ -3,7 +3,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_score, GridSearchCV
 from sklearn.metrics import classification_report, confusion_matrix
 
-# 9. **Bosques Aleatorios (Random Forest)**
+# 9. **Regresión Logística**
 class RegresionLogistica:
     '''Implementacón con grilla de hiperparámetros'''
     def __init__(self, X_train, X_test, y_train, y_test):
@@ -17,7 +17,7 @@ class RegresionLogistica:
         self.best_model=None
         self.best_hiperparametros=None
 
-    def definir_modelo(self, C=[0.001], solver=['liblinear'], penalty=[12], scoring='accuracy', cv=None): # sin cv
+    def definir_modelo(self, C=[0.01], solver=['saga'], penalty=['l2'], scoring='accuracy', cv=None): # sin cv
 
         '''Crea el modelo'''
         self.rl_model = LogisticRegression(max_iter=10000, random_state=42) # problema desbalanceado 10% class 1
@@ -27,8 +27,14 @@ class RegresionLogistica:
         param_grid = {
             'C': [0.001, 0.01, 0.1, 1, 10, 100],          # Regularización
             'solver': ['liblinear', 'lbfgs'],             # Métodos de optimización
-            'penalty': ['l2', 'none'],                    # Tipo de regularización
+            'penalty': ['l1', 'l2', 'elasticnet', None],                      # Tipo de regularización
             }
+        
+        param_grid = [
+            {'penalty': ['l2'], 'solver': ['lbfgs', 'saga'], 'C': [0.01, 0.1, 1, 10]},
+            {'penalty': ['l1'], 'solver': ['saga'], 'C': [0.01, 0.1, 1, 10]},
+            {'penalty': ['elasticnet'], 'solver': ['saga'], 'C': [0.01, 0.1, 1, 10], 'l1_ratio': [0.1, 0.5, 0.9]}
+            ]
         
         self.grid_search = GridSearchCV(
         estimator=self.rl_model, 
