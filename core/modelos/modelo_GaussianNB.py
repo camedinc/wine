@@ -1,10 +1,11 @@
 # Librerías
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import cross_val_score, GridSearchCV
 from sklearn.metrics import classification_report, confusion_matrix
+import numpy as np
 
-# 9. **Bosques Aleatorios (Random Forest)**
-class BosqueAleatorioClasificador:
+# 9. **Bayes Ingenuo**
+class NaiveBayes:
     '''Implementacón con grilla de hiperparámetros'''
     def __init__(self, X_train, X_test, y_train, y_test):
         self.X_train=X_train
@@ -12,28 +13,26 @@ class BosqueAleatorioClasificador:
         self.y_train=y_train
         self.y_test=y_test
         self.y_pred=None
-        self.rf_model=None
+        self.nb_model=None
         self.grid_search=None
         self.best_model=None
         self.best_hiperparametros=None
 
-    def definir_modelo(self, n_estimators=[150], max_depth=[None], min_samples_split=[10], scoring='accuracy', cv=None): # sin cv
+    def definir_modelo(self, scoring='accuracy', cv=None): # sin cv
 
         '''Crea el modelo'''
-        self.rf_model = RandomForestClassifier(class_weight='balanced', random_state=42) # problema desbalanceado 10% class 1
-        print("\nModelo definido\n")
+        self.nb_model = GaussianNB()
+        print("\nModelo definido!\n")
         
         '''Define la grilla'''
         param_grid = {
-            'n_estimators': n_estimators,
-            'max_depth': max_depth,
-            'min_samples_split':min_samples_split
+            'var_smoothing': np.logspace(0,-9, num=100)  # Suavizado de la varianza
             }
         
         self.grid_search = GridSearchCV(
-        estimator=self.rf_model, 
+        estimator=self.nb_model, 
         param_grid=param_grid, 
-        scoring='accuracy', 
+        scoring=scoring, 
         cv=cv,  # Validación cruzada
         verbose=1, 
         n_jobs=-1

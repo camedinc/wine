@@ -1,39 +1,40 @@
 # Librerías
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
 from sklearn.model_selection import cross_val_score, GridSearchCV
 from sklearn.metrics import classification_report, confusion_matrix
 
 # 9. **Bosques Aleatorios (Random Forest)**
-class BosqueAleatorioClasificador:
-    '''Implementacón con grilla de hiperparámetros'''
+class SupportVectorMachineClasificador:
+    '''Implementacón RF con grilla de hiperparámetros'''
     def __init__(self, X_train, X_test, y_train, y_test):
         self.X_train=X_train
         self.X_test=X_test
         self.y_train=y_train
         self.y_test=y_test
         self.y_pred=None
-        self.rf_model=None
+        self.svm_model=None
         self.grid_search=None
         self.best_model=None
         self.best_hiperparametros=None
 
-    def definir_modelo(self, n_estimators=[150], max_depth=[None], min_samples_split=[10], scoring='accuracy', cv=None): # sin cv
+    def definir_modelo(self, C=[0.1], kernel=['linear'], gamma=['auto'], degree=[2], scoring='accuracy', cv=None): # sin cv
 
         '''Crea el modelo'''
-        self.rf_model = RandomForestClassifier(class_weight='balanced', random_state=42) # problema desbalanceado 10% class 1
-        print("\nModelo definido\n")
+        self.svm_model = SVC()
+        print("\nModelo definido!\n")
         
         '''Define la grilla'''
         param_grid = {
-            'n_estimators': n_estimators,
-            'max_depth': max_depth,
-            'min_samples_split':min_samples_split
+            'C': [0.1, 1, 10],  # Parámetro de regularización
+            'kernel': ['linear', 'rbf', 'poly'],  # Tipos de núcleo
+            'gamma': ['scale', 'auto', 0.1, 1],  # Parámetro de kernel
+            'degree': [2, 3]  # Solo relevante para kernel 'poly'
             }
         
         self.grid_search = GridSearchCV(
-        estimator=self.rf_model, 
+        estimator=self.svm_model, 
         param_grid=param_grid, 
-        scoring='accuracy', 
+        scoring=scoring, 
         cv=cv,  # Validación cruzada
         verbose=1, 
         n_jobs=-1
