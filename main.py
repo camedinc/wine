@@ -17,6 +17,7 @@ from core.modelos.modelo_rf import BosqueAleatorioClasificador
 from core.modelos.modelo_svm import SupportVectorMachineClasificador
 from core.modelos.modelo_GaussianNB import NaiveBayes
 from core.modelos.modelo_LogReg import RegresionLogistica
+from core.modelos.modelo_knn import KVecinosCercanos
 from core.evaluacion import Evaluacion
 from core.modelos.error_rf import BosqueAleatorioError
 
@@ -158,6 +159,7 @@ modelo_nb.entrenar_modelo()
 y_pred=modelo_nb.predecir(X_test)
 '''
 # Modelamiento Regresión Logística
+'''
 modelo_rl=RegresionLogistica(X_train, X_test, y_train, y_test)
 
 C=[0.001, 0.01, 0.1, 1, 10, 100],          # Regularización
@@ -169,6 +171,19 @@ cv=5
 modelo_rl.definir_modelo(C, solver, penalty, scoring, cv)
 modelo_rl.entrenar_modelo()
 y_pred=modelo_rl.predecir(X_test)
+'''
+# Modelamiento KNN
+modelo_knn=KVecinosCercanos(X_train, X_test, y_train, y_test)
+
+n_neighbors=[3, 5, 7, 9, 11],                   # Número de vecinos
+weights=['uniform', 'distance'],                # Peso de los vecinos
+metric=['euclidean', 'manhattan', 'minkowski']  # Métrica de distancia
+scoring='recall'
+cv=5
+
+modelo_knn.definir_modelo(n_neighbors, weights, metric, scoring, cv)
+modelo_knn.entrenar_modelo()
+y_pred=modelo_knn.predecir(X_test)
 
 # Evaluación
 evaluacion=Evaluacion(y_test, y_pred)

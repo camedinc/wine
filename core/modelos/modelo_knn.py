@@ -1,10 +1,10 @@
 # Librerías
-from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import cross_val_score, GridSearchCV
 from sklearn.metrics import classification_report, confusion_matrix
 
-# 9. **Regresión Logística**
-class RegresionLogistica:
+# 9. **Vecinos más cercanos KNN**
+class KVecinosCercanos:
     '''Implementacón con grilla de hiperparámetros'''
     def __init__(self, X_train, X_test, y_train, y_test):
         self.X_train=X_train
@@ -12,27 +12,26 @@ class RegresionLogistica:
         self.y_train=y_train
         self.y_test=y_test
         self.y_pred=None
-        self.rl_model=None
+        self.knn_model=None
         self.grid_search=None
         self.best_model=None
         self.best_hiperparametros=None
 
-    def definir_modelo(self, C=[0.01], solver=['saga'], penalty=['l2'], scoring='accuracy', cv=None): # sin cv
+    def definir_modelo(self, n_neighbors=[5], weights=['uniform'], metric=['euclidean'], scoring='accuracy', cv=None): # sin cv
 
         '''Crea el modelo'''
-        self.rl_model = LogisticRegression(max_iter=10000, random_state=42) # problema desbalanceado 10% class 1
+        self.knn_model = KNeighborsClassifier() # problema desbalanceado 10% class 1
         print("\nModelo definido\n")
         
         '''Define la grilla'''
-        # Regularicación, Métodos de optimización (lbfgs, saga, liblinear), Tipo de regularización (l1, l2, elasticnet, none )
-        param_grid = [
-            {'penalty': ['l2'], 'solver': ['lbfgs', 'saga'], 'C': [0.01, 0.1, 1, 10, 100]},
-            {'penalty': ['l1'], 'solver': ['saga'], 'C': [0.01, 0.1, 1, 10]},
-            {'penalty': ['elasticnet'], 'solver': ['saga'], 'C': [0.01, 0.1, 1, 10], 'l1_ratio': [0.1, 0.5, 0.9]}
-            ]
+        param_grid = {
+            'n_neighbors': [3, 5, 7, 9, 11],                   # Número de vecinos
+            'weights': ['uniform', 'distance'],                # Peso de los vecinos
+            'metric': ['euclidean', 'manhattan', 'minkowski']  # Métrica de distancia
+        }
         
         self.grid_search = GridSearchCV(
-        estimator=self.rl_model, 
+        estimator=self.knn_model, 
         param_grid=param_grid, 
         scoring=scoring, 
         cv=cv,  # Validación cruzada
