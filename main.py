@@ -18,6 +18,8 @@ from core.modelos.modelo_svm import SupportVectorMachineClasificador
 from core.modelos.modelo_GaussianNB import NaiveBayes
 from core.modelos.modelo_LogReg import RegresionLogistica
 from core.modelos.modelo_knn import KVecinosCercanos
+from core.modelos.modelo_arbol import ArbolClasificador
+
 from core.evaluacion import Evaluacion
 from core.modelos.error_rf import BosqueAleatorioError
 
@@ -99,6 +101,9 @@ plt.close(fig)
 X = df.drop('quality_class_Medium', axis=1)
 y = df['quality_class_Medium']
 
+# Reserva nombres de columnas
+columnas_X = X.columns.tolist()  # Si usas pandas
+
 # Escalado
 X_scale=escala_num(X)
 print(X_scale)
@@ -136,9 +141,9 @@ y_pred=modelo_rf.predecir(X_test)
 '''
 modelo_svm=SupportVectorMachineClasificador(X_train, X_test, y_train, y_test)
 
-C=[0.1, 1, 10],  # Parámetro de regularización
-kernel=['linear', 'rbf', 'poly'],  # Tipos de núcleo
-gamma=['scale', 'auto', 0.1, 1],  # Parámetro de kernel
+C=[0.1, 1, 10]  # Parámetro de regularización
+kernel=['linear', 'rbf', 'poly']  # Tipos de núcleo
+gamma=['scale', 'auto', 0.1, 1]  # Parámetro de kernel
 degree=[2, 3]  # Solo relevante para kernel 'poly'
 scoring='recall'
 cv=5
@@ -162,9 +167,9 @@ y_pred=modelo_nb.predecir(X_test)
 '''
 modelo_rl=RegresionLogistica(X_train, X_test, y_train, y_test)
 
-C=[0.001, 0.01, 0.1, 1, 10, 100],          # Regularización
-solver=['liblinear', 'lbfgs'],             # Métodos de optimización
-penalty=['l2', 'none'],                    # Tipo de regularización
+C=[0.001, 0.01, 0.1, 1, 10, 100]          # Regularización
+solver=['liblinear', 'lbfgs']             # Métodos de optimización
+penalty=['l2', 'none']                    # Tipo de regularización
 scoring='recall'
 cv=5
 
@@ -173,10 +178,11 @@ modelo_rl.entrenar_modelo()
 y_pred=modelo_rl.predecir(X_test)
 '''
 # Modelamiento KNN
+'''
 modelo_knn=KVecinosCercanos(X_train, X_test, y_train, y_test)
 
-n_neighbors=[3, 5, 7, 9, 11],                   # Número de vecinos
-weights=['uniform', 'distance'],                # Peso de los vecinos
+n_neighbors=[3, 5, 7, 9, 11]                    # Número de vecinos
+weights=['uniform', 'distance']                 # Peso de los vecinos
 metric=['euclidean', 'manhattan', 'minkowski']  # Métrica de distancia
 scoring='recall'
 cv=5
@@ -184,6 +190,27 @@ cv=5
 modelo_knn.definir_modelo(n_neighbors, weights, metric, scoring, cv)
 modelo_knn.entrenar_modelo()
 y_pred=modelo_knn.predecir(X_test)
+'''
+# Modelamiento Árbol
+
+modelo_tree=ArbolClasificador(X_train, X_test, y_train, y_test, columnas_X)
+modelo_tree.importancia()
+
+criterion=['gini', 'entropy']           # Función para medir la calidad de la división
+#max_depth=[None, 5, 10, 20]            # Profundidad máxima del árbol
+max_depth=[4, 5, 6, 7, 10, 20]          # Profundidad máxima del árbol
+min_samples_split=[10, 20, 30, 40]      # Número mínimo de muestras para dividir un nodo
+min_samples_leaf=[5, 10, 15, 20, 25]    # Número mínimo de muestras por hoja
+scoring='f1'
+cv=5
+
+modelo_tree.definir_modelo(criterion, max_depth, min_samples_split, min_samples_leaf, scoring, cv)
+modelo_tree.entrenar_modelo()
+y_pred=modelo_tree.predecir(X_test)
+
+fig=modelo_tree.graficar()
+fig.savefig(os.path.join(path_imagenes,'mejor_arbol.png'), dpi=300, bbox_inches='tight')
+plt.close(fig)
 
 # Evaluación
 evaluacion=Evaluacion(y_test, y_pred)

@@ -26,9 +26,9 @@ class RegresionLogistica:
         '''Define la grilla'''
         # Regularicación, Métodos de optimización (lbfgs, saga, liblinear), Tipo de regularización (l1, l2, elasticnet, none )
         param_grid = [
-            {'penalty': ['l2'], 'solver': ['lbfgs', 'saga'], 'C': [0.01, 0.1, 1, 10, 100]},
-            {'penalty': ['l1'], 'solver': ['saga'], 'C': [0.01, 0.1, 1, 10]},
-            {'penalty': ['elasticnet'], 'solver': ['saga'], 'C': [0.01, 0.1, 1, 10], 'l1_ratio': [0.1, 0.5, 0.9]}
+            {'penalty': ['l2'], 'solver': ['lbfgs', 'saga'], 'C': C},
+            {'penalty': ['l1'], 'solver': ['saga'], 'C': C},
+            {'penalty': ['elasticnet'], 'solver': ['saga'], 'C': C, 'l1_ratio': [0.1, 0.5, 0.9]}
             ]
         
         self.grid_search = GridSearchCV(

@@ -25,9 +25,9 @@ class KVecinosCercanos:
         
         '''Define la grilla'''
         param_grid = {
-            'n_neighbors': [3, 5, 7, 9, 11],                   # Número de vecinos
-            'weights': ['uniform', 'distance'],                # Peso de los vecinos
-            'metric': ['euclidean', 'manhattan', 'minkowski']  # Métrica de distancia
+            'n_neighbors': n_neighbors,   # Número de vecinos
+            'weights': weights,           # Peso de los vecinos
+            'metric': metric              # Métrica de distancia
         }
         
         self.grid_search = GridSearchCV(

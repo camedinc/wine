@@ -17,7 +17,7 @@ class SupportVectorMachineClasificador:
         self.best_model=None
         self.best_hiperparametros=None
 
-    def definir_modelo(self, C=[0.1], kernel=['linear'], gamma=['auto'], degree=[2], scoring='accuracy', cv=None): # sin cv
+    def definir_modelo(self, C=[0.1], kernel=['linear'], gamma=['auto'], degree=[2], scoring='f1', cv=None): # sin cv
 
         '''Crea el modelo'''
         self.svm_model = SVC()
@@ -25,10 +25,10 @@ class SupportVectorMachineClasificador:
         
         '''Define la grilla'''
         param_grid = {
-            'C': [0.1, 1, 10],  # Parámetro de regularización
-            'kernel': ['linear', 'rbf', 'poly'],  # Tipos de núcleo
-            'gamma': ['scale', 'auto', 0.1, 1],  # Parámetro de kernel
-            'degree': [2, 3]  # Solo relevante para kernel 'poly'
+            'C': C,  # Parámetro de regularización
+            'kernel': kernel,  # Tipos de núcleo
+            'gamma': gamma,  # Parámetro de kernel
+            'degree': degree  # Solo relevante para kernel 'poly'
             }
         
         self.grid_search = GridSearchCV(
