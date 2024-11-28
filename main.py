@@ -13,6 +13,7 @@ os.makedirs(path_imagenes, exist_ok=True)
 # Funciones y clases
 from core.utils import separa_num_cat, escala_num, balance, divide_train_test, ohe
 from core.estadistica import Correlacion
+
 from core.modelos.modelo_rf import BosqueAleatorioClasificador
 from core.modelos.modelo_svm import SupportVectorMachineClasificador
 from core.modelos.modelo_GaussianNB import NaiveBayes
@@ -24,6 +25,7 @@ from core.modelos.modelo_xgbm import ExtremoAumentoGradienteClasificador
 from core.modelos.modelo_lgbm import LivianoAumentoGradienteClasificador
 from core.modelos.modelo_cb import CategoricalBoostingClasificador
 from core.modelos.modelo_et import ArbolesExtraClasificador
+from core.modelos.modelo_ann import AnnClasificador
 
 from core.evaluacion import Evaluacion
 from core.modelos.error_rf import BosqueAleatorioError
@@ -281,6 +283,7 @@ y_pred=modelo_cb.predecir(X_test)
 # Extra Trees (Extemely Randomized Trees)
 '''
 # Modelo Extra Trees
+'''
 modelo_et=ArbolesExtraClasificador(X_train, X_test, y_train, y_test)
 
 n_estimators=[60, 100, 300]  # Iteraciones
@@ -292,6 +295,21 @@ cv=5
 modelo_et.definir_modelo(n_estimators, max_depth, min_samples_split, scoring, cv)
 modelo_et.entrenar_modelo()
 y_pred=modelo_et.predecir(X_test)
+'''
+
+# Modelo ANN (ANN - Multilayer Perceptron)
+modelo_ann=AnnClasificador(X_train, X_test, y_train, y_test)
+
+hidden_layer_sizes=[(50,),(100,),(100,50),(50,25)] # Capas ocultas
+activation=['relu','tanh'] # Función de activación
+solver=['adam','sgd'] # Solver
+alpha=[0.0001, 0.001, 0.001] # Alpha
+scoring='f1'
+cv=5
+
+modelo_ann.definir_modelo(hidden_layer_sizes, activation, solver, alpha, scoring, cv)
+modelo_ann.entrenar_modelo()
+y_pred=modelo_ann.predecir(X_test)
 
 # Evaluación
 evaluacion=Evaluacion(y_test, y_pred)
