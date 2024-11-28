@@ -18,6 +18,7 @@ from core.modelos.modelo_rf import BosqueAleatorioClasificador
 from core.modelos.modelo_svm import SupportVectorMachineClasificador
 from core.modelos.modelo_GaussianNB import NaiveBayes
 from core.modelos.modelo_LogReg import RegresionLogistica
+from core.modelos.modelo_LogRegReg import RegresionLogisticaRegularizada
 from core.modelos.modelo_knn import KVecinosCercanos
 from core.modelos.modelo_arbol import ArbolClasificador
 from core.modelos.modelo_gbm import AumentoGradienteClasificador
@@ -298,6 +299,7 @@ y_pred=modelo_et.predecir(X_test)
 '''
 
 # Modelo ANN (ANN - Multilayer Perceptron)
+'''
 modelo_ann=AnnClasificador(X_train, X_test, y_train, y_test)
 
 hidden_layer_sizes=[(50,),(100,),(100,50),(50,25)] # Capas ocultas
@@ -310,6 +312,20 @@ cv=5
 modelo_ann.definir_modelo(hidden_layer_sizes, activation, solver, alpha, scoring, cv)
 modelo_ann.entrenar_modelo()
 y_pred=modelo_ann.predecir(X_test)
+'''
+# Regresión Logística Regularizada (l1, l2, Elasticnet)
+modelo_rlr=RegresionLogisticaRegularizada(X_train, X_test, y_train, y_test)
+
+penalty=['l1','l2','elasticnet']
+C=[0.1, 1, 10]
+solver=['saga']
+l1_ratio=[0.1, 0.6, 0.8] 
+scoring='f1'
+cv=5
+
+modelo_rlr.definir_modelo(penalty, C, solver, l1_ratio, scoring, cv)
+modelo_rlr.entrenar_modelo()
+y_pred=modelo_rlr.predecir(X_test)
 
 # Evaluación
 evaluacion=Evaluacion(y_test, y_pred)
