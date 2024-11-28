@@ -27,6 +27,7 @@ from core.modelos.modelo_lgbm import LivianoAumentoGradienteClasificador
 from core.modelos.modelo_cb import CategoricalBoostingClasificador
 from core.modelos.modelo_et import ArbolesExtraClasificador
 from core.modelos.modelo_ann import AnnClasificador
+from core.modelos.modelo_ensamble import EnsableModelos
 
 from core.evaluacion import Evaluacion
 from core.modelos.error_rf import BosqueAleatorioError
@@ -314,6 +315,7 @@ modelo_ann.entrenar_modelo()
 y_pred=modelo_ann.predecir(X_test)
 '''
 # Regresión Logística Regularizada (l1, l2, Elasticnet)
+'''
 modelo_rlr=RegresionLogisticaRegularizada(X_train, X_test, y_train, y_test)
 
 penalty=['l1','l2','elasticnet']
@@ -326,6 +328,26 @@ cv=5
 modelo_rlr.definir_modelo(penalty, C, solver, l1_ratio, scoring, cv)
 modelo_rlr.entrenar_modelo()
 y_pred=modelo_rlr.predecir(X_test)
+'''
+# Ensamble de modelos
+'''
+from sklearn.ensemble import StackingClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+
+modelo_ensamble=EnsableModelos(X_train, X_test, y_train, y_test)
+
+base_models=[('rf', RandomForestClassifier(n_estimators=100)),
+             ('gb', GradientBoostingClassifier(n_estimators=100))]
+meta_model=LogisticRegression()
+cv=5
+
+modelo_ensamble.definir_modelo_stacking(base_models, meta_model, cv)
+modelo_ensamble.entrenar_modelo_stacking()
+y_pred=modelo_ensamble.predecir_modelo_stacking(X_test)
+'''
+# Modelo AdaBoost (Adaptative Boosting)
+
 
 # Evaluación
 evaluacion=Evaluacion(y_test, y_pred)
