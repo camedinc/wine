@@ -19,6 +19,11 @@ from core.modelos.modelo_GaussianNB import NaiveBayes
 from core.modelos.modelo_LogReg import RegresionLogistica
 from core.modelos.modelo_knn import KVecinosCercanos
 from core.modelos.modelo_arbol import ArbolClasificador
+from core.modelos.modelo_gbm import AumentoGradienteClasificador
+from core.modelos.modelo_xgbm import ExtremoAumentoGradienteClasificador
+from core.modelos.modelo_lgbm import LivianoAumentoGradienteClasificador
+from core.modelos.modelo_cb import CategoricalBoostingClasificador
+from core.modelos.modelo_et import ArbolesExtraClasificador
 
 from core.evaluacion import Evaluacion
 from core.modelos.error_rf import BosqueAleatorioError
@@ -192,7 +197,7 @@ modelo_knn.entrenar_modelo()
 y_pred=modelo_knn.predecir(X_test)
 '''
 # Modelamiento Árbol
-
+'''
 modelo_tree=ArbolClasificador(X_train, X_test, y_train, y_test, columnas_X)
 modelo_tree.importancia()
 
@@ -211,6 +216,82 @@ y_pred=modelo_tree.predecir(X_test)
 fig=modelo_tree.graficar()
 fig.savefig(os.path.join(path_imagenes,'mejor_arbol.png'), dpi=300, bbox_inches='tight')
 plt.close(fig)
+'''
+# Modelamiento Gradient Boosted Trees (GBT o GBM)
+'''
+modelo_gbm=AumentoGradienteClasificador(X_train, X_test, y_train, y_test)
+
+n_estimators=[50, 100, 150]  # Número de estimadores
+learning_rate=[0.01, 0.1, 0.2, 0.5] # Tasa de aprendizaje
+max_depth=[3, 5, 7] # Máxima profundidad
+scoring='f1'
+cv=5
+
+modelo_gbm.definir_modelo(n_estimators, learning_rate, max_depth, scoring, cv)
+modelo_gbm.entrenar_modelo()
+y_pred=modelo_gbm.predecir(X_test)
+
+# XGBoost (Extreme Gradient Boosting)
+# LightGBM (Light Gradient Boosting Machine)
+# CatBoost
+# Extra Trees (Extemely Randomized Trees)
+'''
+# Extreme Gradient Boosting (XGBoost)
+'''
+modelo_xgbm=ExtremoAumentoGradienteClasificador(X_train, X_test, y_train, y_test)
+
+n_estimators=[50, 100, 150]  # Número de estimadores
+learning_rate=[0.01, 0.1, 0.2, 0.5] # Tasa de aprendizaje
+max_depth=[3, 5, 7] # Máxima profundidad
+scoring='f1'
+cv=5
+
+modelo_xgbm.definir_modelo(n_estimators, learning_rate, max_depth, scoring, cv)
+modelo_xgbm.entrenar_modelo()
+y_pred=modelo_xgbm.predecir(X_test)
+'''
+# LightGBM (Light Gradient Boosting Machine)
+'''
+modelo_lgbm=LivianoAumentoGradienteClasificador(X_train, X_test, y_train, y_test)
+
+n_estimators=[50, 100, 150]  # Número de estimadores
+learning_rate=[0.01, 0.1, 0.2, 0.5] # Tasa de aprendizaje
+num_leaves=[15, 31, 63] # ?
+max_depth=[3, 5, 7] # Máxima profundidad
+scoring='f1'
+cv=5
+
+modelo_lgbm.definir_modelo(n_estimators, learning_rate, num_leaves, max_depth, scoring, cv)
+modelo_lgbm.entrenar_modelo()
+y_pred=modelo_lgbm.predecir(X_test)
+'''
+# CatBoost
+'''
+modelo_cb=CategoricalBoostingClasificador(X_train, X_test, y_train, y_test)
+
+iterations=[100, 200, 300]  # Iteraciones
+learning_rate=[0.01, 0.1, 0.2, 0.5] # Tasa de aprendizaje
+depth=[3, 5, 7] # Profundidad
+scoring='f1'
+cv=5
+
+modelo_cb.definir_modelo(iterations, learning_rate, depth, scoring, cv)
+modelo_cb.entrenar_modelo()
+y_pred=modelo_cb.predecir(X_test)
+# Extra Trees (Extemely Randomized Trees)
+'''
+# Modelo Extra Trees
+modelo_et=ArbolesExtraClasificador(X_train, X_test, y_train, y_test)
+
+n_estimators=[60, 100, 300]  # Iteraciones
+max_depth=[None, 5, 7] # Máxima profundidad
+min_samples_split=[3, 6, 15] # Mínima muestra para división
+scoring='f1'
+cv=5
+
+modelo_et.definir_modelo(n_estimators, max_depth, min_samples_split, scoring, cv)
+modelo_et.entrenar_modelo()
+y_pred=modelo_et.predecir(X_test)
 
 # Evaluación
 evaluacion=Evaluacion(y_test, y_pred)
