@@ -7,12 +7,6 @@ from sklearn.pipeline import Pipeline
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import classification_report
 
-# Directorios
-root='C:\\Users\\camed\\OneDrive\\Documentos\\Git\\wine'
-carpeta='imagenes'
-path_imagenes=os.path.join(root, carpeta)
-os.makedirs(path_imagenes, exist_ok=True)
-
 # Funciones y clases
 from core.utils import separa_num_cat, escala_num, balance, divide_train_test, ohe
 from core.estadistica import Correlacion
@@ -31,6 +25,12 @@ from sklearn.pipeline import Pipeline
 
 from core.evaluacion import Evaluacion
 from core.modelos.error_rf import BosqueAleatorioError
+
+# Directorios
+root='C:\\Users\\camed\\OneDrive\\Documentos\\Git\\wine'
+carpeta='imagenes'
+path_imagenes=os.path.join(root, carpeta)
+os.makedirs(path_imagenes, exist_ok=True)
 
 # Data
 path_data=os.path.join(root,'datos\\winequality-red.csv')
