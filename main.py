@@ -31,6 +31,7 @@ from core.modelos.modelo_ensamble import EnsableModelos
 from core.modelos.modelo_adab import AdaBoostClasificador
 from core.modelos.modelo_histgbm import HistGradienteClasificador
 from core.modelos.modelo_perceptron import PerceptronClasificador
+from core.modelos.modelo_RidgeClass import RidgeClasificador
 
 from core.evaluacion import Evaluacion
 from core.modelos.error_rf import BosqueAleatorioError
@@ -378,6 +379,7 @@ modelo_hgbm.entrenar_modelo()
 y_pred=modelo_hgbm.predecir(X_test)
 '''
 # Modelo Perceptron
+'''
 modelo_perceptron=PerceptronClasificador(X_train, X_test, y_train, y_test)
 
 penalty=['l1','l2',None] # Penalidad
@@ -389,7 +391,18 @@ cv=5
 modelo_perceptron.definir_modelo(penalty, alpha, max_iter ,scoring, cv)
 modelo_perceptron.entrenar_modelo()
 y_pred=modelo_perceptron.predecir(X_test)
+'''
+# Modelo Ridge Classifier
+modelo_ridge=RidgeClasificador(X_train, X_test, y_train, y_test)
 
+alpha=[0.1, 1, 10] # Alpha
+solver=['auto', 'sparse_cg', 'sag', 'lbfgs'] # Solver
+scoring='f1'
+cv=5
+
+modelo_ridge.definir_modelo(alpha, solver, scoring, cv)
+modelo_ridge.entrenar_modelo()
+y_pred=modelo_ridge.predecir(X_test)
 # Evaluación
 evaluacion=Evaluacion(y_test, y_pred)
 evaluacion.reporte()
