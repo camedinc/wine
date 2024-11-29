@@ -30,6 +30,7 @@ from core.modelos.modelo_ann import AnnClasificador
 from core.modelos.modelo_ensamble import EnsableModelos
 from core.modelos.modelo_adab import AdaBoostClasificador
 from core.modelos.modelo_histgbm import HistGradienteClasificador
+from core.modelos.modelo_perceptron import PerceptronClasificador
 
 from core.evaluacion import Evaluacion
 from core.modelos.error_rf import BosqueAleatorioError
@@ -363,6 +364,7 @@ modelo_ada.entrenar_modelo()
 y_pred=modelo_ada.predecir(X_test)
 '''
 # Modelo HistGradientBoosting
+'''
 modelo_hgbm=HistGradienteClasificador(X_train, X_test, y_train, y_test)
 
 learning_rate=[0.01, 0.1, 0.2] # Tasa de aprendizaje
@@ -374,6 +376,19 @@ cv=5
 modelo_hgbm.definir_modelo(learning_rate, max_iter, max_depth, scoring, cv)
 modelo_hgbm.entrenar_modelo()
 y_pred=modelo_hgbm.predecir(X_test)
+'''
+# Modelo Perceptron
+modelo_perceptron=PerceptronClasificador(X_train, X_test, y_train, y_test)
+
+penalty=['l1','l2',None] # Penalidad
+alpha=[0.0001,0.001,0.01] # Alpha
+max_iter=[100] # Máximo de iteraciones
+scoring='f1'
+cv=5
+
+modelo_perceptron.definir_modelo(penalty, alpha, max_iter ,scoring, cv)
+modelo_perceptron.entrenar_modelo()
+y_pred=modelo_perceptron.predecir(X_test)
 
 # Evaluación
 evaluacion=Evaluacion(y_test, y_pred)
