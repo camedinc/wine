@@ -17,6 +17,6 @@ with open(path_data_names, 'r') as file:
     contenido = file.read()
     print(contenido)
 
-# Escritura
+# Escritura y formato csv
 df_red.to_csv(path_data_red, sep=',', index=True, encoding='utf-8')
 df_white.to_csv(path_data_white, sep=',', index=True, encoding='utf-8')
