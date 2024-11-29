@@ -28,6 +28,7 @@ from core.modelos.modelo_cb import CategoricalBoostingClasificador
 from core.modelos.modelo_et import ArbolesExtraClasificador
 from core.modelos.modelo_ann import AnnClasificador
 from core.modelos.modelo_ensamble import EnsableModelos
+from core.modelos.modelo_adab import AdaBoostClasificador
 
 from core.evaluacion import Evaluacion
 from core.modelos.error_rf import BosqueAleatorioError
@@ -298,7 +299,6 @@ modelo_et.definir_modelo(n_estimators, max_depth, min_samples_split, scoring, cv
 modelo_et.entrenar_modelo()
 y_pred=modelo_et.predecir(X_test)
 '''
-
 # Modelo ANN (ANN - Multilayer Perceptron)
 '''
 modelo_ann=AnnClasificador(X_train, X_test, y_train, y_test)
@@ -347,7 +347,18 @@ modelo_ensamble.entrenar_modelo_stacking()
 y_pred=modelo_ensamble.predecir_modelo_stacking(X_test)
 '''
 # Modelo AdaBoost (Adaptative Boosting)
+modelo_ada=AdaBoostClasificador(X_train, X_test, y_train, y_test)
 
+n_estimators=[50, 100, 200] # Número de estimadores
+learning_rate= [0.01, 0.1, 0.2] # Tasa de aprendizaje
+estimator__max_depth=[1, 2, 5] # Máxima profundidad estimador base
+estimator__min_samples_split=[2,5,7,10] # Ejemplo de ajuste de árbol
+scoring='f1'
+cv=5
+
+modelo_ada.definir_modelo(n_estimators, learning_rate, estimator__max_depth, estimator__min_samples_split, scoring, cv)
+modelo_ada.entrenar_modelo()
+y_pred=modelo_ada.predecir(X_test)
 
 # Evaluación
 evaluacion=Evaluacion(y_test, y_pred)
