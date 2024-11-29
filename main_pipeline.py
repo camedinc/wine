@@ -26,12 +26,6 @@ from sklearn.pipeline import Pipeline
 from core.evaluacion import Evaluacion
 from core.modelos.error_rf import BosqueAleatorioError
 
-# Directorios
-root='C:\\Users\\camed\\OneDrive\\Documentos\\Git\\wine'
-carpeta='imagenes'
-path_imagenes=os.path.join(root, carpeta)
-os.makedirs(path_imagenes, exist_ok=True)
-
 # Data
 path_data=os.path.join(root,'datos\\winequality-red-clean.csv')
 #print(path_data)
