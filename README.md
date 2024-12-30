@@ -103,7 +103,7 @@ pip install -r requirements.txt
 ![Matriz de Correlación](imagenes/1_correlacion.png)
 
 #### **Curva ROC**:
-![Curva ROC](imagenes/curva_roc.png)
+![Curva ROC](imagenes/4_roc.png)
 
 #### **Matriz de Confusión**:
 ![Matriz de Confusión](imagenes/3_confusion.png)
