@@ -106,4 +106,4 @@ pip install -r requirements.txt
 ![Curva ROC](imagenes/curva_roc.png)
 
 #### **Matriz de Confusión**:
-![Matriz de Confusión](imagenes/matriz_confusion.png)
+![Matriz de Confusión](imagenes/3_confusion.png)
