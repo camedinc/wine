@@ -100,7 +100,7 @@ pip install -r requirements.txt
 
 ### **Visualizaciones Generadas**
 #### **Matriz de Correlación**:
-![Matriz de Correlación](wine/imagenes/matriz_correlacion.png)
+![Matriz de Correlación](wine/imagenes/1_matriz_correlacion.png)
 
 #### **Curva ROC**:
 ![Curva ROC](imagenes/curva_roc.png)
